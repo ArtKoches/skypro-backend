@@ -5,7 +5,7 @@ const port = 3003
 
 const endpoint = {
     MAIN: '/',
-    USERS: '/users',
+    USERS: '/?users',
     HELLO: '/?hello'
 }
 
@@ -16,7 +16,7 @@ const server = http.createServer((request, response) => {
     if(userName) {
         response.statusCode = 200
         response.statusMessage = 'OK'
-        response.header = 'Content-Type: text/plain'
+        response.appendHeader("Content-Type", "text/plain")
         response.write(`Hello, ${userName}.`)   
         response.end()
 
@@ -27,21 +27,21 @@ const server = http.createServer((request, response) => {
         case endpoint.MAIN:
             response.statusCode = 200
             response.statusMessage = 'OK'
-            response.header = 'Content-Type: text/plain'
+            response.appendHeader("Content-Type", "text/plain")
             response.write('Hello, World!')
             response.end()
             break;
         case endpoint.USERS:
             response.statusCode = 200
             response.statusMessage = 'OK'
-            response.header = 'Content-Type: application/json'
+            response.appendHeader("Content-Type", "application/json")
             response.write(getUsers())
             response.end()
             break;
         case endpoint.HELLO:
             response.statusCode = 400
             response.statusMessage = 'Bad Request'
-            response.header = 'Content-Type: text/plain'
+            response.appendHeader("Content-Type", "text/plain")
             response.write('Enter a name')
             response.end()
             break;
@@ -49,8 +49,6 @@ const server = http.createServer((request, response) => {
         default:
             response.statusCode = 500
             response.statusMessage = 'Server Error'
-            response.header = 'Content-Type: text/plain'
-            response.write('{}')
             response.end()    
             break;
     }

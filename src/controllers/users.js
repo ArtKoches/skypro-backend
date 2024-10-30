@@ -16,6 +16,9 @@ const getUser = (request, response) => {
 	const { user_id } = request.params
 	return User.findById(user_id)
 	.then((user) => {
+		if(!user) {
+			return response.sendStatus(404)
+		}
 		response.status(200).send(user)
 	})
 	.catch((err) => {
@@ -39,6 +42,9 @@ const updateUser = (request, response) => {
 	const { user_id } = request.params
 	return User.findByIdAndUpdate(user_id, { ...request.body })
 	.then((user) => {
+		if(!user) {
+			return response.sendStatus(404)
+		}
 		response.status(200).send(user)
 	})
 	.catch((err) => {
@@ -50,8 +56,11 @@ const deleteUser = (request, response) => {
 	// Delete user
 	const { user_id } = request.params
 	return User.findByIdAndDelete(user_id)
-	.then(() => {
-		response.status(200).send('User success deleted')
+	.then((user) => {
+		if(!user) {
+			return response.sendStatus(404)
+		}
+		response.sendStatus(200)
 	})
 	.catch((err) => {
 		response.status(500).send(err.message)

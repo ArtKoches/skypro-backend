@@ -3,11 +3,13 @@ const dotenv = require('dotenv')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const mongoose = require('mongoose')
+const mainRouter = require('./routes/main')
 const userRouter = require('./routes/users')
+const bookRouter = require('./routes/books')
 const requestUrl = require('./middlewares/requestUrl')
 const notFound = require('./middlewares/notFound')
 
-// Env configuration
+// Env config
 dotenv.config()
 const {
     PORT = 3005,
@@ -24,24 +26,17 @@ mongoose.connect(MONGO_URL)
     if(err) throw err
 })
 
-// Express app
+// Express app use
 const app = express()
 
-//server start
-const welcomeToLibrary = (request, response) => {
-    response.status(200)  
-    response.send('Welcome to the library of your dreams!')
-}
-app.get('/', welcomeToLibrary)
-
-//express use
 app.use(cors())
 app.use(bodyParser.json())
 app.use(requestUrl)
+app.use(mainRouter)
 app.use(userRouter)
+app.use(bookRouter)
 app.use(notFound)
 
-//express server listener
 app.listen(PORT, () => {
     console.log(`Сервер запущен по адресу ${API_URL}:${PORT}`)
 })
